@@ -1,0 +1,37 @@
+require 'rake/clean'
+
+file 'tokyo_monthly.dat' => 'tokyo_monthly.csv' do
+  sh 'ruby encode_csv.rb tokyo_monthly.csv tokyo_monthly.dat n4f2.1f2.1F3.1'
+end
+
+file 'tokyo_daily.dat' => 'tokyo_daily.csv' do
+  sh 'ruby encode_csv.rb tokyo_daily.csv tokyo_daily.dat n4f2.1f2.1F2.1'
+end
+
+file 'tokyo_hourly.dat' => 'tokyo_hourly.csv' do
+  sh 'ruby encode_csv.rb tokyo_hourly.csv tokyo_hourly.dat n4f2.1F2.1'
+end
+
+rule '.js' => '.coffee' do |t|
+  sh "coffee -c #{t.source}"
+end
+
+file 'encode64.js' => 'encode64.coffee'
+
+file 'tokyo_monthly.js' => 'tokyo_monthly.coffee'
+
+file 'tokyo_daily.js' => 'tokyo_daily.coffee'
+
+file 'tokyo_hourly.js' => 'tokyo_hourly.coffee'
+
+task all: ['encode64.js', 'tokyo_monthly.js', 'tokyo_monthly.dat', 'tokyo_daily.js', 'tokyo_daily.dat', 'tokyo_hourly.js', 'tokyo_hourly.dat']
+
+task build: :all do
+  sh 'cp *.js ../public/js/'
+  sh 'cp *.dat ../public/data/'
+end
+
+task default: :build
+
+CLEAN << 'tokyo_monthly.dat' << 'tokyo_daily.dat' << 'tokyo_hourly.dat' << 'encode64.js' << 'tokyo_monthly.js' << 'tokyo_daily.js' << 'tokyo_hourly.js'
+

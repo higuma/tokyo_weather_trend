@@ -1,0 +1,56 @@
+html { font-family: Arial, Helvetica, sans-serif; }
+
+#title {
+  font-size: 24px;
+  margin-bottom: 0;
+}
+
+p.help {
+  font-size: 14px;
+  margin-top: 0;
+}
+
+svg { font-size: 12px; }
+
+rect.bg { fill: #f8fafc; }
+
+.axis { shape-rendering: crispEdges; }
+
+.axis path, .axis line {
+  fill: none;
+  stroke-width: 1px;
+}
+
+.axis.x line { stroke: #ddd; }
+.axis.y.temp line { stroke: #fca; }
+.axis.y.prec line { stroke: #acf; }
+
+.axis.y text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+path.temp.area {
+  fill: #e30;
+  fill-opacity: 0.7;
+  stroke: #e30;
+  stroke-opacity: 0.7;
+  /* stroke-width is adjusted dynamically */
+}
+
+path.temp.line {
+  fill: none;
+  stroke: #e51;
+  stroke-width: 1px;
+}
+
+path.prec {
+  fill: #27b;
+  stroke: none;
+}
+
+rect.pane {
+  fill: none;
+  pointer-events: all;
+}
+
