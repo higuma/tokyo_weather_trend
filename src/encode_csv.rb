@@ -4,7 +4,7 @@ def process(infile, outfile, spec)
   puts "#{infile} => #{outfile}"
   format = Encode64::format spec
   open infile do |csv|
-    csv.gets    # abandon the first line (hedder)
+    csv.gets    # abandon the first line (header)
     open outfile, 'w' do |txt|
       while s = csv.gets
         data = s.split(',')
