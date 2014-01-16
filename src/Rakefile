@@ -1,37 +1,56 @@
+HAML_FILES = [
+  'index',
+  'tokyo_monthly',
+  'tokyo_daily',
+  'tokyo_hourly'
+]
+
+SASS_FILES = [
+  'style'
+]
+
+COFFEE_FILES = [
+  'Decpack',
+  'TokyoMonthly',
+  'TokyoDaily',
+  'TokyoHourly'
+]
+
+DATA_FILES = {
+  'tokyo_monthly' => 'b21 r10.1 r10.1 R13.1',
+  'tokyo_daily' => 'b20 r10.1 r10.1 R12.1',
+  'tokyo_hourly' => 'B19 r10.1 R10.1'
+}
+
+########################################################################
 require 'rake/clean'
 
-file 'tokyo_monthly.dat' => 'tokyo_monthly.csv' do
-  sh 'ruby encode_csv.rb tokyo_monthly.csv tokyo_monthly.dat n4f2.1f2.1F3.1'
+rule('.html' => '.haml') {|t| sh "haml #{t.source} #{t.name}" }
+rule('.css' => '.sass') {|t| sh "sass #{t.source} #{t.name}" }
+rule('.js' => '.coffee') {|t| sh "coffee -c #{t.source}" }
+
+rule('.dp6' => '.csv') do |t|
+  format = DATA_FILES[t.name[0, t.name.size - 4]]
+  sh "ruby csv2dp6.rb #{t.source} #{t.name} '#{format}'"
 end
 
-file 'tokyo_daily.dat' => 'tokyo_daily.csv' do
-  sh 'ruby encode_csv.rb tokyo_daily.csv tokyo_daily.dat n4f2.1f2.1F2.1'
+HAML_FILES.each {|name| file "#{name}.html" => "#{name}.haml" }
+SASS_FILES.each {|name| file "#{name}.css" => "#{name}.sass" }
+COFFEE_FILES.each {|name| file "#{name}.js" => "#{name}.coffee" }
+DATA_FILES.each_key {|name| file "#{name}.txt" => "#{name}.csv" }
+
+all_files = HAML_FILES.map {|f| f + '.html'} +
+            SASS_FILES.map {|f| f + '.css'} +
+            COFFEE_FILES.map {|f| f + '.js'} +
+            DATA_FILES.keys.map {|f| f + '.dp6'}
+
+task all: all_files do
+  sh 'cp *.html ../public'
+  sh 'cp *.css ../public/css'
+  sh 'cp *.js ../public/js'
+  sh 'cp *.dp6 ../public/data'
 end
 
-file 'tokyo_hourly.dat' => 'tokyo_hourly.csv' do
-  sh 'ruby encode_csv.rb tokyo_hourly.csv tokyo_hourly.dat n4f2.1F2.1'
-end
+task default: :all
 
-rule '.js' => '.coffee' do |t|
-  sh "coffee -c #{t.source}"
-end
-
-file 'encode64.js' => 'encode64.coffee'
-
-file 'tokyo_monthly.js' => 'tokyo_monthly.coffee'
-
-file 'tokyo_daily.js' => 'tokyo_daily.coffee'
-
-file 'tokyo_hourly.js' => 'tokyo_hourly.coffee'
-
-task all: ['encode64.js', 'tokyo_monthly.js', 'tokyo_monthly.dat', 'tokyo_daily.js', 'tokyo_daily.dat', 'tokyo_hourly.js', 'tokyo_hourly.dat']
-
-task build: :all do
-  sh 'cp *.js ../public/js/'
-  sh 'cp *.dat ../public/data/'
-end
-
-task default: :build
-
-CLEAN << 'tokyo_monthly.dat' << 'tokyo_daily.dat' << 'tokyo_hourly.dat' << 'encode64.js' << 'tokyo_monthly.js' << 'tokyo_daily.js' << 'tokyo_hourly.js'
-
+CLEAN.concat all_files

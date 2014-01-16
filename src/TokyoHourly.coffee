@@ -11,11 +11,11 @@ $('#graph').html "
     <rect class='bg' x='0' y='0' width='#{Width}' height='#{Height}' />
     <g class='x axis' transform='translate(0,#{Height})' />
     <g class='y axis temp'>
-      <text class='y axis' x='#{-Height/2}' y='-3em'
+      <text class='y axis' x='#{-Height/2}' y='-4.5em'
        transform='rotate(-90)'>Temperature (℃)</text>
     </g>
     <g class='y axis prec' transform='translate(#{Width},0)'>
-      <text class='y axis' x='#{-Height/2}' y='3.5em'
+      <text class='y axis' x='#{-Height/2}' y='5em'
        transform='rotate(-90)'>Precipitation (mm/h)</text>
     </g>
     <path class='graph prec' />
@@ -42,19 +42,19 @@ xAxis = d3.svg.axis()
   .tickFormat(timeFormat)
   .orient("bottom")
   .tickSize(-Height, 0)
-  .tickPadding(6)
+  .tickPadding(10)
 
 yAxisT = d3.svg.axis()
   .scale(yScaleT)
   .orient("left")
   .tickSize(-Width)
-  .tickPadding(6)
+  .tickPadding(18)
 
 yAxisP = d3.svg.axis()
   .scale(yScaleP)
   .orient("right")
   .tickSize(-Width)
-  .tickPadding(6)
+  .tickPadding(18)
 
 lineT = d3.svg.line()
   .interpolate("step-after")
@@ -86,7 +86,7 @@ searchData = (data, at) ->
 
 selectData = (data, domain) ->
   [from, to] = domain
-  data.slice searchData(data, from), searchData(data, to) + 1
+  data.slice searchData(data, from), searchData(data, to) + 2
 
 drawGraph = (data, classT, shapeT, strokeW) ->
   part = selectData data, xScale.domain()
@@ -110,23 +110,17 @@ drawGraph = (data, classT, shapeT, strokeW) ->
 decodeData = (data) ->
   tzOffset = ((new Date()).getTimezoneOffset() + 9 * 60) * 60 * 1000
   convertTime = (epochHour) -> new Date(epochHour * 1000 * 3600 + tzOffset)
-  format = [
-    ['n', 4]
-    ['f', 2, 1]
-    ['F', 2, 1]
-  ]
-  size = Encode64.dataSize format
-  result = []
-  offset = 0
-  length = data.length - size
-  while offset <= length
-    x = Encode64.decodeFormat(format, data, offset)
-    result.push
-      time: convertTime(x[0])
-      temp: x[1]
-      prec: x[2]
-    offset += size
-  result
+  unpack = Decpack.unpack data, eof: true
+  data = []
+  until unpack.eof()
+    tm = convertTime unpack.B 19
+    t = unpack.r 10, 1
+    p = unpack.R 10, 1
+    data.push
+      time: tm
+      temp: t
+      prec: p
+  data
 
 class DataSet
   constructor: (data) ->
@@ -285,7 +279,7 @@ pane.mousewheel (event, delta, deltaX, deltaY) ->
 
 $('body').css 'cursor', "wait"
 
-$.ajax("data/tokyo_hourly.dat").done (data) ->
+$.ajax("data/tokyo_hourly.dp6").done (data) ->
   onLoadData(data)
   $('body').css 'cursor', "auto"
   $('rect.pane').css 'cursor', "move"

@@ -17,7 +17,7 @@
 
   Height = FrameH - Margin.top - Margin.bottom;
 
-  $('#graph').html("<svg width='" + FrameW + "' height='" + FrameH + "'>  <g transform='translate(" + Margin.left + "," + Margin.top + ")'>    <rect class='bg' x='0' y='0' width='" + Width + "' height='" + Height + "' />    <g class='x axis' transform='translate(0," + Height + ")' />    <g class='y axis temp'>      <text class='y axis' x='" + (-Height / 2) + "' y='-3em'       transform='rotate(-90)'>Temperature (℃)</text>    </g>    <g class='y axis prec' transform='translate(" + Width + ",0)'>      <text class='y axis' x='" + (-Height / 2) + "' y='3.5em'       transform='rotate(-90)'>Precipitation (mm/month)</text>    </g>    <path class='graph prec area' />    <path class='graph temp area' stroke-width='0.2' />    <rect class='pane' width='" + Width + "' height='" + Height + "' />  </g></svg>");
+  $('#graph').html("<svg width='" + FrameW + "' height='" + FrameH + "'>  <g transform='translate(" + Margin.left + "," + Margin.top + ")'>    <rect class='bg' x='0' y='0' width='" + Width + "' height='" + Height + "' />    <g class='x axis' transform='translate(0," + Height + ")' />    <g class='y axis temp'>      <text class='y axis' x='" + (-Height / 2) + "' y='-4.5em'       transform='rotate(-90)'>Temperature (℃)</text>    </g>    <g class='y axis prec' transform='translate(" + Width + ",0)'>      <text class='y axis' x='" + (-Height / 2) + "' y='5em'       transform='rotate(-90)'>Precipitation (mm/month)</text>    </g>    <path class='graph prec area' />    <path class='graph temp area' stroke-width='0.2' />    <rect class='pane' width='" + Width + "' height='" + Height + "' />  </g></svg>");
 
   xScale = d3.time.scale().range([0, Width]);
 
@@ -38,11 +38,11 @@
 
   xAxis = d3.svg.axis().scale(xScale).tickFormat(timeFormat).tickFormat(function(d) {
     return timeFormat(d);
-  }).orient("bottom").tickSize(-Height, 0).tickPadding(6);
+  }).orient("bottom").tickSize(-Height, 0).tickPadding(10);
 
-  yAxisT = d3.svg.axis().scale(yScaleT).orient("left").tickSize(-Width).tickPadding(6);
+  yAxisT = d3.svg.axis().scale(yScaleT).orient("left").tickSize(-Width).tickPadding(18);
 
-  yAxisP = d3.svg.axis().scale(yScaleP).orient("right").tickSize(-Width).tickPadding(6);
+  yAxisP = d3.svg.axis().scale(yScaleP).orient("right").tickSize(-Width).tickPadding(18);
 
   areaT = d3.svg.area().interpolate("step-after").x(function(d) {
     return xScale(d.time);
@@ -78,7 +78,7 @@
   selectData = function(data, domain) {
     var from, to;
     from = domain[0], to = domain[1];
-    return data.slice(searchData(data, from), searchData(data, to) + 1);
+    return data.slice(searchData(data, from), searchData(data, to) + 2);
   };
 
   drawGraph = function(data, strokeW) {
@@ -92,27 +92,28 @@
   };
 
   decodeData = function(data) {
-    var convertTime, format, length, offset, result, size, tzOffset, x;
+    var convertTime, pr, t0, t1, tm, tzOffset, unpack;
     tzOffset = ((new Date()).getTimezoneOffset() + 9 * 60) * 60 * 1000;
     convertTime = function(epochHour) {
       return new Date(epochHour * 1000 * 3600 + tzOffset);
     };
-    format = [['n', 4], ['f', 2, 1], ['f', 2, 1], ['F', 3, 1]];
-    size = Encode64.dataSize(format);
-    result = [];
-    offset = 0;
-    length = data.length - size;
-    while (offset <= length) {
-      x = Encode64.decodeFormat(format, data, offset);
-      result.push({
-        time: convertTime(x[0]),
-        min: x[1],
-        max: x[2],
-        prec: x[3]
+    unpack = Decpack.unpack(data, {
+      eof: true
+    });
+    data = [];
+    while (!unpack.eof()) {
+      tm = convertTime(unpack.b(21));
+      t0 = unpack.r(10, 1);
+      t1 = unpack.r(10, 1);
+      pr = unpack.R(13, 1);
+      data.push({
+        time: tm,
+        min: t0,
+        max: t1,
+        prec: pr
       });
-      offset += size;
     }
-    return result;
+    return data;
   };
 
   DataSet = (function() {
@@ -334,7 +335,7 @@
 
   $('body').css('cursor', "wait");
 
-  $.ajax("data/tokyo_monthly.dat").done(function(data) {
+  $.ajax("data/tokyo_monthly.dp6").done(function(data) {
     onLoadData(data);
     $('body').css('cursor', "auto");
     return $('rect.pane').css('cursor', "move");

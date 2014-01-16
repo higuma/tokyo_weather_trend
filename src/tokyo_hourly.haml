@@ -1,0 +1,19 @@
+-# coding: utf-8
+!!! 5
+%html
+  %head
+    %meta(charset='UTF-8')
+    %meta(http-equiv='Content-Type' content='text/html; charset=UTF-8')
+    %title Hourly weather trend of Tokyo
+    %link(href='css/style.css' type='text/css' rel='stylesheet')
+
+  %body
+    %h1#title Hourly weather of Tokyo
+    %p.help Drag to move, wheel (shift-drag) to zoom
+    %div#graph
+    - ['js/d3.v3.min.js',
+       'js/jquery-1.10.2.min.js',
+       'js/jquery.mousewheel.js',
+       'js/Decpack.js',
+       'js/TokyoHourly.js'].each do |src|
+      %script{src: src, type: 'text/javascript', charset: 'UTF-8'}
