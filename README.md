@@ -2,7 +2,6 @@
 [D3]: http://d3js.org/ "D3 - Data-Driven Documents"
 [Decpack]: https://github.com/higuma/decpack "Decpack"
 [Haml]: http://haml.info/ "Haml (HTML abstraction markup language)"
-[Heroku]: https://www.heroku.com/ "Heroku"
 [jQuery]: http://jquery.com/ "jQuery"
 [jQuery Mousewheel]: http://plugins.jquery.com/mousewheel/ "jQuery Mousewheel"
 [node.js]: http://nodejs.org/ "node.js"
@@ -47,15 +46,13 @@
 
 ## 使用ライブラリ、ツール
 
-コードは[CoffeeScript][]で記述しています(要[node.js][])。次のJavaScriptライブラリを使用しています。
+次のJavaScriptライブラリを使用しています。
 
 * [D3][]
 * [jQuery][]
 * [jQuery Mousewheel][]
 
-HTMLとCSSのコード生成は[Haml][]と[Sass][]、プロジェクト管理は[Rake][]を用いています。
-
-またデータの圧縮には自作の数値データ専用圧縮ライブラリ[Decpack][]を用いています。
+コードは[CoffeeScript][]で記述しています(要[node.js][])。HTMLとCSSのコード生成は[Haml][]と[Sass][]、プロジェクト管理は[Rake][]を用いています。またデータ圧縮に自作の数値データ専用圧縮ライブラリ[Decpack][]を用いています。
 
 ## ライセンス
 
