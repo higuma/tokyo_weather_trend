@@ -1,3 +1,4 @@
-/dev
+dev
+tokyo_weather_trend
 *.swp
 .sass-cache
