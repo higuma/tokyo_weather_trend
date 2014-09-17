@@ -14,21 +14,21 @@
 
 This web application displays long-term temperature/precipitation trend graphs of Tokyo. You can zoom and drag graph horizontally (click on the titles to view graphs).
 
-## [Monthly stats trend](http://higuma.github.io/tokyo-weather-trend/tokyo_monthly.html)
+## [Monthly stats trend](http://higuma.github.io/tokyo_weather_trend/tokyo_monthly.html)
 
 Monthly statistics trend graph from Jan. 1876 to Dec. 2013.
 
 * temperature (monthly min/max of daily average: red bar)
 * precipitation (monthly total: blue bar)
 
-## [Daily stats trend](http://higuma.github.io/tokyo-weather-trend/tokyo_daily.html)
+## [Daily stats trend](http://higuma.github.io/tokyo_weather_trend/tokyo_daily.html)
 
 Daily statistics trend graph from Jan. 1 1949 to Dec. 31 2013.
 
 * temperature (daily min/max of hourly average: red bar)
 * precipitation (daily total: blue bar)
 
-## [Hourly stats trend](http://higuma.github.io/tokyo-weather-trend/tokyo_hourly.html)
+## [Hourly stats trend](http://higuma.github.io/tokyo_weather_trend/tokyo_hourly.html)
 
 Hourly statistics trend graph from 01:00 Jan. 1 1990 to 00:00 Jan. 1 2014.
 

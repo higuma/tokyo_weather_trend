@@ -15,21 +15,21 @@
 
 東京の気温/降水量の長期トレンドを表示するWebアプリケーションです。月間、一日、一時間の3種類のデータをズーム(横方向)、ドラッグ(左右)可能なグラフで表示します(下記タイトルをクリックするとそれぞれのページに進みます)。
 
-## [月間統計値トレンド](http://higuma.github.io/tokyo-weather-trend/tokyo_monthly.html)
+## [月間統計値トレンド](http://higuma.github.io/tokyo_weather_trend/tokyo_monthly.html)
 
 1876年1月から2013年12月までの月間値のトレンドグラフです。
 
 * 気温(日平均の月間最小、最大: 赤のバー)
 * 降水量(月間合計値: 青のバー)
 
-## [一日統計値トレンド](http://higuma.github.io/tokyo-weather-trend/tokyo_daily.html)
+## [一日統計値トレンド](http://higuma.github.io/tokyo_weather_trend/tokyo_daily.html)
 
 1949年1月1日から2013年12月31日までの一日測定値のトレンドグラフです。
 
 * 気温(一時間平均値の最小、最大: 赤のバー)
 * 降水量(一日積算値: 青のバー)
 
-## [一時間統計値トレンド](http://higuma.github.io/tokyo-weather-trend/tokyo_hourly.html)
+## [一時間統計値トレンド](http://higuma.github.io/tokyo_weather_trend/tokyo_hourly.html)
 
 > (注意)データ量が多いため立ち上げにやや時間を要します。
 
